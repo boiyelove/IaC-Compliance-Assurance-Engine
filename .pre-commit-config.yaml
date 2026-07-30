@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: iac-assurance
+        name: IaC assurance
+        entry: python3 src/assurance.py scan --catalog config/control-catalog.json --exceptions config/exceptions.json --output build/pre-commit --fail-on high
+        language: system
+        files: \.(bicep|tf)$
+        pass_filenames: true

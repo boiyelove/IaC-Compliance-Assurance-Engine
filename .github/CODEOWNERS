@@ -1,0 +1,4 @@
+* @platform-owners
+/src/ @platform-owners @security-owners
+/config/ @security-owners @compliance-owners
+/.github/ @security-owners

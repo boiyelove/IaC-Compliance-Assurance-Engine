@@ -1,0 +1,49 @@
+{
+  "catalog_version": "2026.07.1",
+  "rules": [
+    {
+      "id": "AZ-NET-001",
+      "title": "Public network access must not be explicitly enabled",
+      "severity": "high",
+      "controls": ["ISO27001:2022-A.8.20", "SOC2-CC6.6"],
+      "remediation": "Disable public network access and use an approved private endpoint and DNS path.",
+      "patterns": {
+        "bicep": ["publicNetworkAccess\\s*:\\s*['\\\"]Enabled['\\\"]"],
+        "terraform": ["public_network_access_enabled\\s*=\\s*true"]
+      }
+    },
+    {
+      "id": "AZ-CRYPTO-001",
+      "title": "TLS minimum must be 1.2 or later",
+      "severity": "high",
+      "controls": ["ISO27001:2022-A.8.24", "SOC2-CC6.7"],
+      "remediation": "Set the service TLS minimum to 1.2 or later.",
+      "patterns": {
+        "bicep": ["minimumTlsVersion\\s*:\\s*['\\\"](?:1\\.0|1\\.1)['\\\"]"],
+        "terraform": ["min_tls_version\\s*=\\s*['\\\"](?:1\\.0|1\\.1|TLS1_0|TLS1_1)['\\\"]"]
+      }
+    },
+    {
+      "id": "AZ-IDENTITY-001",
+      "title": "Shared-key or local authentication must not be explicitly enabled",
+      "severity": "high",
+      "controls": ["ISO27001:2022-A.5.17", "SOC2-CC6.1"],
+      "remediation": "Disable local/shared-key authentication and use a managed identity with least privilege.",
+      "patterns": {
+        "bicep": ["disableLocalAuth\\s*:\\s*false", "allowSharedKeyAccess\\s*:\\s*true"],
+        "terraform": ["local_auth_enabled\\s*=\\s*true", "shared_access_key_enabled\\s*=\\s*true"]
+      }
+    },
+    {
+      "id": "AZ-DATA-001",
+      "title": "Purge protection must not be explicitly disabled",
+      "severity": "critical",
+      "controls": ["ISO27001:2022-A.8.13", "SOC2-CC7.4"],
+      "remediation": "Enable purge protection and document the retention and recovery procedure.",
+      "patterns": {
+        "bicep": ["enablePurgeProtection\\s*:\\s*false"],
+        "terraform": ["purge_protection_enabled\\s*=\\s*false"]
+      }
+    }
+  ]
+}

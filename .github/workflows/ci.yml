@@ -1,0 +1,63 @@
+name: assurance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: azure/setup-bicep@v2
+        with:
+          version: v0.31.92
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+      - name: Validate repository
+        run: ./scripts/validate.sh
+      - name: Scan repository IaC
+        run: |
+          python3 src/assurance.py scan \
+            --files-from config/ci-files.txt \
+            --catalog config/control-catalog.json \
+            --exceptions config/exceptions.json \
+            --output build/evidence \
+            --fail-on high
+      - name: Trivy configuration scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: config
+          scan-ref: examples/compliant
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: compliance-evidence
+          path: build/evidence/
+          if-no-files-found: error
+
+  attest:
+    if: github.event_name == 'push'
+    needs: validate
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: compliance-evidence
+          path: evidence
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: evidence/manifest.json

@@ -1,0 +1,2 @@
+examples/compliant/main.bicep
+examples/compliant/main.tf
