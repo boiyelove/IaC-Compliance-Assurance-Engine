@@ -10,6 +10,19 @@ rule set is a reliable minimum gate and is designed to complement Bicep,
 Terraform, Checkov, Trivy, Microsoft Defender for DevOps, Azure Policy, and
 human review—not replace them.
 
+## Project metadata
+
+The metadata below is derived from tracked source, manifests, and infrastructure
+files. It describes what this repository includes; live-service integration remains
+bounded by the documented deployment and validation limitations.
+
+| Category | Included |
+| --- | --- |
+| Platforms | Microsoft Azure; GitHub Actions |
+| Services and stack | Terraform; Bicep; GitHub Actions; Azure Policy; Log Analytics |
+| Languages and formats | Python; Bicep; Bicep parameters; Terraform HCL; Bash; JSON; YAML |
+| Delivery and IaC | Bicep + `.bicepparam`; GitHub Actions CI; Terraform; YAML configuration; Python validation/tests |
+
 ## Problem statement
 
 Compliant and deliberately unsafe Bicep/Terraform fixtures are evaluated against a versioned control catalog, producing deterministic JSON, SARIF, and evidence manifests for CI review.
