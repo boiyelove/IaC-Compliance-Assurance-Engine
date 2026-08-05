@@ -38,6 +38,14 @@ Stakeholders receive a decision package they can attach to a change record: requ
 
 The upper boundary names the principal services and technologies used by this repository. The lower boundary shows the implemented control flow: desired state is validated, provider action remains an explicit integration gate, and sanitized evidence is retained for review and deterministic replay.
 
+## Best complementary diagram
+
+**Recommended view: Pre-deployment IaC assurance pipeline.** A delivery-pipeline view is the strongest complement because it makes artifact progression, security gates, promotion authority, and evidence outputs visible.
+
+![Icon-based pre-deployment iac assurance pipeline for IaC Compliance Assurance Engine](docs/operational-view.svg)
+
+The view follows **Ingest Terraform and Bicep → Run deterministic controls → Apply scoped exceptions → Gate and publish evidence**. Use it during design reviews, operational walkthroughs, and failure-mode discussions; use the logical architecture above when the question is which technologies integrate.
+
 ## Quickstart
 
 Requires Python 3.11+ and no third-party packages.
