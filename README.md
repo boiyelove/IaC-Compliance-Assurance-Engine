@@ -38,8 +38,6 @@ Stakeholders receive a decision package they can attach to a change record: requ
 
 The upper boundary names the principal services and technologies used by this repository. The lower boundary shows the implemented control flow: desired state is validated, provider action remains an explicit integration gate, and sanitized evidence is retained for review and deterministic replay.
 
-Azure product icons come from [Microsoft's official Azure Architecture Icons](https://learn.microsoft.com/azure/architecture/icons/). Open-source marks are sourced from [Simple Icons](https://simpleicons.org/) when shown; each mark identifies its respective technology.
-
 ## Quickstart
 
 Requires Python 3.11+ and no third-party packages.
@@ -128,3 +126,16 @@ See [SECURITY.md](SECURITY.md), [CONTRIBUTING.md](CONTRIBUTING.md),
 - [Support policy](SUPPORT.md)
 - [Changelog](CHANGELOG.md)
 - [License](LICENSE)
+
+## Infrastructure inputs
+
+Resource behavior and deploy-time values are intentionally separated:
+
+- [Compliant Bicep fixture](examples/compliant/main.bicep) and [its parameters](examples/compliant/main.bicepparam) — a hardened Key Vault example used to prove passing controls.
+- [Noncompliant Bicep fixture](examples/noncompliant/main.bicep) and [its parameters](examples/noncompliant/main.bicepparam) — an intentionally unsafe scanner fixture used to prove findings.
+
+Start with the parameter file's safe values, replace synthetic identifiers, and run an Azure what-if before deployment.
+
+## Attribution
+
+Azure product icons come from [Microsoft's official Azure Architecture Icons](https://learn.microsoft.com/azure/architecture/icons/). Open-source marks are sourced from [Simple Icons](https://simpleicons.org/) when shown; each mark identifies its respective technology.
