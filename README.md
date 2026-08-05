@@ -10,30 +10,35 @@ rule set is a reliable minimum gate and is designed to complement Bicep,
 Terraform, Checkov, Trivy, Microsoft Defender for DevOps, Azure Policy, and
 human review—not replace them.
 
-## Example synopsis
+## Problem statement
 
 Compliant and deliberately unsafe Bicep/Terraform fixtures are evaluated against a versioned control catalog, producing deterministic JSON, SARIF, and evidence manifests for CI review.
 
-## Real-world scenario
+A production implementation can still fail even when every resource deploys successfully. The material risk is configuration that passes syntax checks but violates control intent, or an exception that reaches farther and lasts longer than expected. The design therefore treats Terraform, Bicep, GitHub Actions, and the surrounding identity and evidence controls as one reviewable system rather than unrelated configuration tasks.
+
+## Example case study
+
+### Situation
 
 A bank cannot rely on reviewers to notice every insecure storage or network setting in large infrastructure pull requests. The engine converts policy intent into repeatable pre-merge evidence and blocks high-risk changes before Azure deployment.
 
-## Vertical slice
+### Response
 
-```mermaid
-flowchart LR
-  C[Changed .bicep/.tf files] --> S[Built-in scanners]
-  X[External scanner SARIF] --> N[Normalization boundary]
-  S --> N
-  M[Versioned control catalog] --> N
-  E[Expiring exceptions] --> N
-  N --> G{Severity gate}
-  N --> R[results.sarif]
-  N --> J[report.json]
-  R --> H[evidence manifest]
-  J --> H
-  H --> A[GitHub artifact attestation]
-```
+A Terraform change proposes obsolete TLS while its Bicep counterpart follows the baseline. Both are evaluated against the same control intent; the insecure fixture is rejected and CI receives deterministic JSON, SARIF, and hash-addressed evidence.
+
+The team first exercises the repository's synthetic approved and denied fixtures. An approved request must produce the same idempotent plan on replay; a stale, unscoped, public, or unapproved request must fail before an Azure adapter is allowed to run.
+
+### Expected outcome
+
+Stakeholders receive a decision package they can attach to a change record: requested scope, controls evaluated, the reason for approval or denial, and the explicit handoff to live integration. The example supports design review and incident rehearsal without pretending that a local test changed Azure.
+
+## Architecture
+
+![Icon-based architecture for IaC-Compliance-Assurance-Engine](docs/architecture.svg)
+
+The upper boundary names the principal services and technologies used by this repository. The lower boundary shows the implemented control flow: desired state is validated, provider action remains an explicit integration gate, and sanitized evidence is retained for review and deterministic replay.
+
+Azure product icons come from [Microsoft's official Azure Architecture Icons](https://learn.microsoft.com/azure/architecture/icons/). Open-source marks are sourced from [Simple Icons](https://simpleicons.org/) when shown; each mark identifies its respective technology.
 
 ## Quickstart
 
@@ -84,7 +89,7 @@ Run all local gates:
 Only explicit unsafe settings are flagged; absence is not treated as proof of
 compliance. The default gate fails on active `high` or `critical` findings.
 Rules, severities, mappings, and remediation are versioned in
-[[`config/control-catalog.json`](config/control-catalog.json)](config/control-catalog.json).
+[`config/control-catalog.json`](config/control-catalog.json).
 
 ## Exceptions
 
