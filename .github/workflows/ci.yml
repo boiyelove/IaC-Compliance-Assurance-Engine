@@ -58,6 +58,6 @@ jobs:
         with:
           name: compliance-evidence
           path: evidence
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-path: evidence/manifest.json
